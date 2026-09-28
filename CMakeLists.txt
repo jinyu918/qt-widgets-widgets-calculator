@@ -14,6 +14,8 @@ find_package(Qt6 6.9.2 REQUIRED COMPONENTS Widgets)
 
 qt_add_executable(QtWidgetsCalculator
     src/main.cpp
+    src/calculatorengine.cpp
+    src/calculatorengine.h
     src/mainwindow.cpp
     src/mainwindow.h
     src/mainwindow.ui
