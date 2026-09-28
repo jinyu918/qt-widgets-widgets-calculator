@@ -281,6 +281,7 @@ feat(input): add keyboard event handling
 任务：
 
 - 为 `CalculatorEngine` 添加离线、确定性的 Qt Test。
+- 为 `MainWindow` 添加少量窗口级输入测试，验证鼠标、键盘和混合输入复用同一 engine。
 - 覆盖成功路径、输入错误路径和错误恢复路径。
 - 不为每个界面按钮重复编写相同的业务测试。
 
@@ -306,6 +307,8 @@ feat(input): add keyboard event handling
 ```text
 test(engine): add calculator state regression tests
 ```
+
+窗口级测试目标：`MainWindowInputTest`，覆盖按钮输入、键盘输入、混合输入和待处理运算符提示。
 
 ### 阶段 8：边界修复和最终验证
 
