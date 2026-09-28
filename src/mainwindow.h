@@ -1,5 +1,7 @@
 #pragma once
 
+#include "calculatorengine.h"
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -17,5 +19,9 @@ public:
     ~MainWindow() override;
 
 private:
+    void connectCalculatorButtons();
+    void refreshDisplay();
+
     Ui::MainWindow *ui;
+    CalculatorEngine engine_;
 };
