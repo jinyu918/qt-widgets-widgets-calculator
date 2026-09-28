@@ -10,6 +10,8 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+class QKeyEvent;
+
 class MainWindow final : public QMainWindow
 {
     Q_OBJECT

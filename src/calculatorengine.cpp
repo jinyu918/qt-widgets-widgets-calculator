@@ -152,7 +152,6 @@ void CalculatorEngine::inputEquals()
         return;
     }
 
-    leftOperand_ = currentInput_.toDouble();
     pendingOperator_.reset();
     waitingForOperand_ = false;
     justEvaluated_ = true;
@@ -236,7 +235,7 @@ bool CalculatorEngine::applyPending(double rightOperand)
         result = left * rightOperand;
         break;
     case Operator::Divide:
-        if (qFuzzyIsNull(rightOperand)) {
+        if (rightOperand == 0.0) {
             error_ = true;
             return false;
         }

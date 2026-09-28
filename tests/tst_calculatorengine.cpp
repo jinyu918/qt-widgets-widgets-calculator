@@ -9,14 +9,17 @@ class CalculatorEngineTest final : public QObject
 private slots:
     void performsBasicOperations();
     void formatsDecimalResults();
+    void formatsRepeatingDecimalResults();
     void ignoresRepeatedDecimalPoint();
     void replacesConsecutiveOperators();
     void supportsUnaryMinus();
     void handlesDivisionByZero();
     void recoversFromErrorWithNewInput();
     void startsNewInputAfterResult();
+    void startsNegativeInputAfterResult();
     void continuesFromResultWithOperator();
     void ignoresRepeatedEquals();
+    void ignoresCommandsInError();
     void removesLastInputCharacter();
     void clearsState();
 };
@@ -46,6 +49,17 @@ void CalculatorEngineTest::formatsDecimalResults()
     engine.inputEquals();
 
     QCOMPARE(engine.displayText(), QStringLiteral("4.6"));
+}
+
+void CalculatorEngineTest::formatsRepeatingDecimalResults()
+{
+    CalculatorEngine engine;
+    engine.inputDigit(1);
+    engine.inputOperator(CalculatorEngine::Operator::Divide);
+    engine.inputDigit(3);
+    engine.inputEquals();
+
+    QCOMPARE(engine.displayText(), QStringLiteral("0.3333333333"));
 }
 
 void CalculatorEngineTest::ignoresRepeatedDecimalPoint()
@@ -120,6 +134,19 @@ void CalculatorEngineTest::startsNewInputAfterResult()
     QCOMPARE(engine.displayText(), QStringLiteral("7"));
 }
 
+void CalculatorEngineTest::startsNegativeInputAfterResult()
+{
+    CalculatorEngine engine;
+    engine.inputDigit(2);
+    engine.inputOperator(CalculatorEngine::Operator::Add);
+    engine.inputDigit(3);
+    engine.inputEquals();
+    engine.inputOperator(CalculatorEngine::Operator::Subtract);
+    engine.inputDigit(4);
+
+    QCOMPARE(engine.displayText(), QStringLiteral("-4"));
+}
+
 void CalculatorEngineTest::continuesFromResultWithOperator()
 {
     CalculatorEngine engine;
@@ -144,6 +171,22 @@ void CalculatorEngineTest::ignoresRepeatedEquals()
     engine.inputEquals();
 
     QCOMPARE(engine.displayText(), QStringLiteral("5"));
+}
+
+void CalculatorEngineTest::ignoresCommandsInError()
+{
+    CalculatorEngine engine;
+    engine.inputDigit(8);
+    engine.inputOperator(CalculatorEngine::Operator::Divide);
+    engine.inputDigit(0);
+    engine.inputEquals();
+    engine.inputOperator(CalculatorEngine::Operator::Add);
+    engine.inputEquals();
+    engine.backspace();
+    engine.inputOperator(CalculatorEngine::Operator::Subtract);
+
+    QVERIFY(engine.hasError());
+    QCOMPARE(engine.displayText(), QStringLiteral("Error"));
 }
 
 void CalculatorEngineTest::removesLastInputCharacter()
