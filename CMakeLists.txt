@@ -17,6 +17,7 @@ qt_add_executable(QtWidgetsCalculator
     src/mainwindow.cpp
     src/mainwindow.h
     src/mainwindow.ui
+    resources/calculator.qrc
 )
 
 target_link_libraries(QtWidgetsCalculator PRIVATE Qt6::Widgets)
