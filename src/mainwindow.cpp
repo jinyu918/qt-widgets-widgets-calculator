@@ -74,6 +74,7 @@ void MainWindow::connectCalculatorButtons()
 
 void MainWindow::refreshDisplay()
 {
+    ui->operationLabel->setText(engine_.operationText());
     ui->displayEdit->setText(engine_.displayText());
 }
 
@@ -82,7 +83,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     const int key = event->key();
     if (key >= Qt::Key_0 && key <= Qt::Key_9) {
         engine_.inputDigit(key - Qt::Key_0);
-    } else if (key == Qt::Key_Period || key == Qt::Key_Comma || key == Qt::Key_Decimal) {
+    } else if (key == Qt::Key_Period || key == Qt::Key_Comma) {
         engine_.inputDecimal();
     } else if (key == Qt::Key_Plus) {
         engine_.inputOperator(CalculatorEngine::Operator::Add);

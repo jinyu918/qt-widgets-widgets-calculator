@@ -15,6 +15,31 @@ QString CalculatorEngine::displayText() const
     return currentInput_;
 }
 
+QString CalculatorEngine::operationText() const
+{
+    if (error_ || !leftOperand_ || !pendingOperator_) {
+        return {};
+    }
+
+    QString symbol;
+    switch (*pendingOperator_) {
+    case Operator::Add:
+        symbol = QStringLiteral("+");
+        break;
+    case Operator::Subtract:
+        symbol = QStringLiteral("−");
+        break;
+    case Operator::Multiply:
+        symbol = QStringLiteral("×");
+        break;
+    case Operator::Divide:
+        symbol = QStringLiteral("÷");
+        break;
+    }
+
+    return formatResult(*leftOperand_) + QLatin1Char(' ') + symbol;
+}
+
 bool CalculatorEngine::hasError() const
 {
     return error_;

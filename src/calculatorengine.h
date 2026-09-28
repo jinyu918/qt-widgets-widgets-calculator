@@ -22,6 +22,7 @@ public:
     void clear();
 
     QString displayText() const;
+    QString operationText() const;
     bool hasError() const;
 
 private:

@@ -8,7 +8,7 @@
 
 https://github.com/jinyu918/qt-widgets-widgets-calculator.git
 
-当前本地目录 `D:\Qt作业\lab1` 尚未建立 Git 工作树。远程仓库可以访问，但当前没有返回远程分支，因此执行时需要先确认仓库是否为空，再建立本地工程和 Git 关联。
+本地工作树位于 `D:\Qt作业\lab1` 的 `main` 分支，并已关联远程仓库。远程仓库可以访问，但当前没有返回远程分支，因此按空仓库处理。
 
 ## 2. 范围和边界
 
@@ -382,7 +382,7 @@ test(engine): add calculator state regression tests
 
 - 本地工作树已经建立在 `main` 分支，并关联远程仓库；远程仓库初始化查询没有返回远程分支。
 - 已完成工程初始化、Qt Designer 布局、QSS 样式、计算 engine、鼠标按钮连接、键盘事件和 Qt Test 目标。
-- 当前本机未发现 Qt 6.9.2、CMake 或 C++ 编译器，构建、Qt Test 和运行截图需要在具备 Qt 工具链的环境中补做。
+- 当前本机已发现 Qt Creator 4.15.0、Visual Studio 2022、MSVC 和 CMake；Qt Creator 仅关联 Qt 5.12.11 MinGW kit，未发现实验要求的 Qt 6.9.2 SDK。构建、Qt Test 和运行截图需要在补齐 Qt 6.9.2 SDK 后执行。
 - 实验文档的页面渲染检查受当前环境缺少 LibreOffice 影响；文档文字、表格和参考图片已经完成内容核对。
 
 ## 10. 执行进度
@@ -397,5 +397,11 @@ test(engine): add calculator state regression tests
 - `87bc5fd`：连接鼠标按钮
 - `1f9ea3c`：实现键盘事件
 - `42740dc`：添加 Qt Test 回归测试
+- `dc2c498`：修复结果精度和边界状态并记录验证材料
+
+后续修复：
+
+- 未提交：增加运算提示行，确保待处理运算符在界面中可见。
+- 未提交：修正键盘小数点映射，移除不存在的 `Qt::Key_Decimal`。
 
 阶段 8 的边界记录和测试结果记录位于 `report/`。完成最终交付前，需要在 Qt 工具链环境中运行构建、测试和手工 UI 验证，并把实际截图和结果回写到报告材料。

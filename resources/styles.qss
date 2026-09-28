@@ -2,6 +2,12 @@ QMainWindow {
     background-color: #f5f7fa;
 }
 
+QLabel#operationLabel {
+    color: #667481;
+    font-size: 16px;
+    padding-right: 8px;
+}
+
 QLineEdit#displayEdit {
     background-color: #ffffff;
     border: 1px solid #d6dce5;

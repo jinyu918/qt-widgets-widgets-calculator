@@ -8,6 +8,7 @@ class CalculatorEngineTest final : public QObject
 
 private slots:
     void performsBasicOperations();
+    void exposesPendingOperation();
     void formatsDecimalResults();
     void formatsRepeatingDecimalResults();
     void ignoresRepeatedDecimalPoint();
@@ -34,6 +35,17 @@ void CalculatorEngineTest::performsBasicOperations()
     engine.inputEquals();
 
     QCOMPARE(engine.displayText(), QStringLiteral("15"));
+}
+
+void CalculatorEngineTest::exposesPendingOperation()
+{
+    CalculatorEngine engine;
+    engine.inputDigit(1);
+    engine.inputDigit(2);
+    engine.inputOperator(CalculatorEngine::Operator::Add);
+
+    QCOMPARE(engine.operationText(), QStringLiteral("12 +"));
+    QCOMPARE(engine.displayText(), QStringLiteral("12"));
 }
 
 void CalculatorEngineTest::formatsDecimalResults()

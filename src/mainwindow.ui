@@ -29,6 +29,22 @@
      <number>12</number>
     </property>
     <item>
+     <widget class="QLabel" name="operationLabel">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>24</height>
+       </size>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLineEdit" name="displayEdit">
       <property name="minimumSize">
        <size>
