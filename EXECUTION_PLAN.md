@@ -2,7 +2,7 @@
 
 ## 1. 任务定义
 
-本计划用于实现课程实验“带键盘事件的计算器”。目标是创建一个基于 Qt 6.9.2 Widgets 的 C++ 计算器，使用 Qt Designer 完成界面，使用 CMake 构建，并通过鼠标和键盘完成一致的计算操作。
+本计划用于实现课程实验“带键盘事件的计算器”。目标是创建一个基于本机 Qt 5.12.11 Widgets 的 C++ 计算器，使用 Qt Designer 完成界面，使用 CMake 构建，并通过鼠标和键盘完成一致的计算操作。
 
 远程仓库：
 
@@ -119,14 +119,14 @@ D:\Qt作业\lab1\
 
 任务：
 
-1. 确认 Qt 6.9.2、Qt Creator、CMake 和 Qt Test 可用。
+1. 确认 Qt 5.12.11、Qt Creator、CMake 和 Qt Test 可用。
 2. 确认远程仓库当前状态。
 3. 在本地建立 Git 工作树并关联远程仓库。
 4. 保留当前 `AGENTS.md` 作为执行规则。
 
 验证：
 
-- CMake 可以发现 Qt 6.9.2。
+- CMake 可以发现 Qt 5.12.11。
 - 空工程可以配置和构建。
 - Git 状态只包含预期文件。
 
@@ -138,8 +138,8 @@ D:\Qt作业\lab1\
 
 - 创建 CMake 工程。
 - 固定 C++17。
-- 引入 `Qt6::Widgets`。
-- 为测试目标引入 `Qt6::Test`。
+- 引入 `Qt5::Widgets`。
+- 为测试目标引入 `Qt5::Test`。
 - 创建可运行的空窗口。
 
 验证：
@@ -370,7 +370,7 @@ test(engine): add calculator state regression tests
 
 任务完成时应满足：
 
-- Qt 6.9.2、C++17、CMake 工程可以配置和构建。
+- Qt 5.12.11、C++17、CMake 工程可以配置和构建。
 - Qt Test 全部通过。
 - 鼠标和键盘输入结果一致。
 - 主键盘和数字小键盘均可输入。
@@ -385,8 +385,8 @@ test(engine): add calculator state regression tests
 
 - 本地工作树已经建立在 `main` 分支，并关联远程仓库；远程仓库初始化查询没有返回远程分支。
 - 已完成工程初始化、Qt Designer 布局、QSS 样式、计算 engine、鼠标按钮连接、键盘事件和 Qt Test 目标。
-- 当前本机已发现 Qt Creator 4.15.0、Visual Studio 2022、MSVC 和 CMake；Qt Creator 仅关联 Qt 5.12.11 MinGW kit，未发现实验要求的 Qt 6.9.2 SDK。构建、Qt Test 和运行截图需要在补齐 Qt 6.9.2 SDK 后执行。
-- 实验文档的页面渲染检查受当前环境缺少 LibreOffice 影响；文档文字、表格和参考图片已经完成内容核对。
+- 当前本机已发现 Qt Creator 4.15.0、Visual Studio 2022、MSVC、CMake 和 Qt 5.12.11 MinGW kit；本次按用户要求只使用 Qt 5.12.11。
+- 实验文档的页面渲染检查受当前环境缺少 LibreOffice 影响；本仓库内的 Markdown 计划、边界记录、测试结果和运行截图已经完成内容核对。
 
 ## 10. 执行进度
 
@@ -403,5 +403,6 @@ test(engine): add calculator state regression tests
 - `dc2c498`：修复结果精度和边界状态并记录验证材料
 - `4cf09d7`：显示待处理运算符并补充边界验证
 - `f9a6913`：添加鼠标、键盘和混合输入的窗口级测试
+- 工作树修改：按用户要求将 CMake 和 Qt Test 构建配置切换为 Qt 5.12.11，并记录阶段 8 的实际验证结果
 
-阶段 8 的边界记录和测试结果记录位于 `report/`。完成最终交付前，需要在 Qt 工具链环境中运行构建、测试和手工 UI 验证，并把实际截图和结果回写到报告材料。
+阶段 8 已完成：Debug/Release 构建和 Qt Test 均通过，关键输入路径已在 Qt 5 Release 窗口中复核，截图和边界记录位于 `report/`。未执行远程推送。

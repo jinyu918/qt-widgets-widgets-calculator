@@ -1,68 +1,61 @@
 # 测试结果记录
 
+## 构建环境
+
+- Qt 版本：Qt 5.12.11 MinGW 7.3.0
+- Qt Creator：4.15.0 Community
+- CMake：Visual Studio 2022 自带 CMake 3.31.6
+- C++ 标准：C++17
+- 测试平台：Windows，窗口级测试使用 `QT_QPA_PLATFORM=offscreen`
+
+由于工作树路径包含中文字符，Qt 5.12.11 的 `moc` 在原路径下会把自动生成文件路径解析为乱码。验证时使用 `X:` 临时映射到同一工作树，源代码和提交内容没有复制或修改。
+
 ## 自动化测试
 
-测试目标：`CalculatorEngineTest`
+Debug 和 Release 均完成配置、编译和测试：
 
-测试文件：`tests/tst_calculatorengine.cpp`
+| 配置 | 构建结果 | Qt Test 结果 |
+|---|---|---|
+| Debug | `QtWidgetsCalculator`、`tst_calculatorengine`、`tst_mainwindow` 全部编译成功 | 2/2 通过，0.49 秒 |
+| Release | `QtWidgetsCalculator`、`tst_calculatorengine`、`tst_mainwindow` 全部编译成功 | 2/2 通过，0.33 秒 |
 
-覆盖内容：
-
-- 基础四则运算
-- 小数结果格式化
-- 重复小数点
-- 连续普通运算符
-- 一元负数
-- 除零错误
-- 错误恢复
-- 结果后重新输入
-- 结果后继续运算
-- 连续等号
-- 退格
-- 清除
-
-窗口级输入测试目标：`MainWindowInputTest`
-
-在现有 Qt 5.12.11 kit 上做的兼容性验证中，以下 4 个窗口级用例全部通过：
-
-- 鼠标按钮完成 `1 + 2 =`。
-- 键盘完成 `1 + 2 =`。
-- 鼠标和键盘混合完成 `6 + -3 =`。
-- 运算提示行显示 `8 ÷`。
-
-该结果证明按钮和键盘路径都进入同一套 engine 命令，但仍不替代 Qt 6.9.2 的最终运行验证。
-
-计划执行命令：
+运行方式：
 
 ```text
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
-cmake --build build --config Debug
-ctest --test-dir build -C Debug --output-on-failure
+cmake -S X:\\lab1 -B X:\\lab1\\build-ascii -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+cmake --build X:\\lab1\\build-ascii --parallel 4
+ctest --test-dir X:\\lab1\\build-ascii --output-on-failure
 ```
 
-当前状态：本机已发现 Qt Creator 4.15.0、Visual Studio 2022、MSVC 和 CMake，但 Qt Creator 当前仅关联 Qt 5.12.11 MinGW kit，未发现 Qt 6.9.2 SDK。因此上述配置在 `find_package(Qt6 6.9.2)` 处停止，编译和测试尚未执行。代码已经完成 CMake 目标接线、测试声明/定义一致性检查和 Git diff 检查；这些静态检查不能替代 Qt Test 的实际运行结果。
+测试目标和覆盖内容：
+
+- `CalculatorEngineTest`：16 个用例，覆盖四则运算、结果格式化、重复小数点、连续运算符、一元负数、除零、错误恢复、结果继续输入/运算、连续等号、退格和清除。
+- `MainWindowInputTest`：4 个用例，覆盖鼠标按钮、主键盘、鼠标与键盘混合输入，以及待处理运算符提示行。
 
 ## 手工验证矩阵
 
-| 场景 | 鼠标 | 键盘 | 预期 |
+| 场景 | 验证路径 | 结果 | 证据 |
 |---|---|---|---|
-| `12 + 3 =` | 待执行 | 待执行 | `15` |
-| `1.2 + 3.4 =` | 待执行 | 待执行 | `4.6` |
-| `1..2` | 待执行 | 待执行 | `1.2` |
-| `6 ++ 3 =` | 待执行 | 待执行 | `9` |
-| `6 + -3 =` | 待执行 | 待执行 | `3` |
-| `8 ÷ 0 =` | 待执行 | 待执行 | `Error` |
-| `Error` 后输入 `5` | 待执行 | 待执行 | `5` |
-| `2 + 3 = 7` | 待执行 | 待执行 | `7` |
-| `2 + 3 = × 4 =` | 待执行 | 待执行 | `20` |
-| `2 + 3 = =` | 待执行 | 待执行 | 保持 `5` |
+| `1 + 2 =` | 鼠标按钮 | `3` | `screenshots/qt5-mouse-addition.png` |
+| `1 + 2 =` | 数字小键盘 | `3` | `screenshots/qt5-keypad-addition.png` |
+| `1..2` | 数字小键盘 | `1.2`，第二个小数点被忽略 | Qt 5 Release 窗口观察；engine 自动化用例 `ignoresRepeatedDecimalPoint` |
+| `6 ++ 3 =` | 数字小键盘 | `9` | Qt 5 Release 窗口观察；engine 自动化用例 `replacesConsecutiveOperators` |
+| `6 + -3 =` | 数字小键盘 | `3` | `screenshots/qt5-unary-minus.png` |
+| `8 ÷ 0 =` | 数字小键盘 | `Error` | `screenshots/qt5-error.png` |
+| `Error` 后输入 `5` | 数字小键盘 | `5` | `screenshots/qt5-error-recovery.png` |
+| `2 + 3 =` 后输入 `7` | engine 自动化 | `7` | `startsNewInputAfterResult` |
+| `2 + 3 = × 4 =` | engine 自动化 | `20` | `continuesFromResultWithOperator` |
+| `2 + 3 = =` | engine 自动化 | 保持 `5` | `ignoresRepeatedEquals` |
 
-## 构建环境缺口
+## 截图索引
 
-本机现有 Qt Creator 4.15.0 仅关联 Qt 5.12.11 MinGW kit。为提前检查 C++、`.ui`、QSS 资源和窗口接线，已在临时目录使用 Qt 5.12.11 做兼容性验证：
+- `screenshots/qt5-ui-initial.png`：初始界面、按钮层级和布局。
+- `screenshots/qt5-mouse-addition.png`：鼠标完成加法。
+- `screenshots/qt5-keypad-addition.png`：数字小键盘完成加法。
+- `screenshots/qt5-unary-minus.png`：`6 + -3 = 3`。
+- `screenshots/qt5-error.png`：除零后的 `Error` 状态。
+- `screenshots/qt5-error-recovery.png`：错误状态输入 `5` 后恢复。
 
-- `CalculatorEngine` 测试：16 个用例通过。
-- Widgets 应用：完整编译成功。
-- Qt 5 验证不作为 Qt 6.9.2 的最终验收依据。
+## 未执行的验证
 
-在补齐 Qt 6.9.2 后，应重新运行 CMake 配置、Debug/Release 构建、Qt Test 和手工 UI 验证，并把实际通过数量、构建配置和截图路径写入本文件。当前 `report/screenshots/` 只保留目录，不保留临时 Qt 5 预览图。
+仓库没有 `make check` 目标，因此使用 CMake 构建和 CTest 作为等价验证。当前环境没有 LibreOffice，未对原始课程文档做页面渲染检查；本仓库内的 Markdown 计划、边界记录和测试记录已完成文字核对。未执行远程推送。

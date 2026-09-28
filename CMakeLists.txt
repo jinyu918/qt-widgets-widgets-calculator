@@ -10,9 +10,9 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 6.9.2 REQUIRED COMPONENTS Widgets)
+find_package(Qt5 5.12.11 REQUIRED COMPONENTS Widgets)
 
-qt_add_executable(QtWidgetsCalculator
+add_executable(QtWidgetsCalculator
     src/main.cpp
     src/calculatorengine.cpp
     src/calculatorengine.h
@@ -22,7 +22,7 @@ qt_add_executable(QtWidgetsCalculator
     resources/calculator.qrc
 )
 
-target_link_libraries(QtWidgetsCalculator PRIVATE Qt6::Widgets)
+target_link_libraries(QtWidgetsCalculator PRIVATE Qt5::Widgets)
 
 include(GNUInstallDirs)
 install(TARGETS QtWidgetsCalculator
