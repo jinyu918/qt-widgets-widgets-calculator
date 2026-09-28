@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QKeyEvent>
 #include <QPushButton>
 
 #include <array>
@@ -74,4 +75,34 @@ void MainWindow::connectCalculatorButtons()
 void MainWindow::refreshDisplay()
 {
     ui->displayEdit->setText(engine_.displayText());
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    const int key = event->key();
+    if (key >= Qt::Key_0 && key <= Qt::Key_9) {
+        engine_.inputDigit(key - Qt::Key_0);
+    } else if (key == Qt::Key_Period || key == Qt::Key_Comma || key == Qt::Key_Decimal) {
+        engine_.inputDecimal();
+    } else if (key == Qt::Key_Plus) {
+        engine_.inputOperator(CalculatorEngine::Operator::Add);
+    } else if (key == Qt::Key_Minus) {
+        engine_.inputOperator(CalculatorEngine::Operator::Subtract);
+    } else if (key == Qt::Key_Asterisk) {
+        engine_.inputOperator(CalculatorEngine::Operator::Multiply);
+    } else if (key == Qt::Key_Slash) {
+        engine_.inputOperator(CalculatorEngine::Operator::Divide);
+    } else if (key == Qt::Key_Enter || key == Qt::Key_Return || key == Qt::Key_Equal) {
+        engine_.inputEquals();
+    } else if (key == Qt::Key_Backspace) {
+        engine_.backspace();
+    } else if (key == Qt::Key_Escape || key == Qt::Key_C) {
+        engine_.clear();
+    } else {
+        QMainWindow::keyPressEvent(event);
+        return;
+    }
+
+    refreshDisplay();
+    event->accept();
 }
