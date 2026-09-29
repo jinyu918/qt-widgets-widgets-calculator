@@ -11,6 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    for (int column = 0; column < 4; ++column) {
+        ui->buttonGridLayout->setColumnStretch(column, 1);
+    }
+    for (int row = 0; row < 5; ++row) {
+        ui->buttonGridLayout->setRowStretch(row, 1);
+    }
     setFocusPolicy(Qt::StrongFocus);
     connectCalculatorButtons();
     refreshDisplay();
