@@ -8,6 +8,7 @@ class CalculatorEngineTest final : public QObject
 
 private slots:
     void performsBasicOperations();
+    void retainsCompletedExpressionUntilNextInput();
     void exposesPendingOperation();
     void formatsDecimalResults();
     void formatsRepeatingDecimalResults();
@@ -35,6 +36,24 @@ void CalculatorEngineTest::performsBasicOperations()
     engine.inputEquals();
 
     QCOMPARE(engine.displayText(), QStringLiteral("15"));
+    QCOMPARE(engine.operationText(), QStringLiteral("12 + 3"));
+}
+
+void CalculatorEngineTest::retainsCompletedExpressionUntilNextInput()
+{
+    CalculatorEngine engine;
+    engine.inputDigit(3);
+    engine.inputOperator(CalculatorEngine::Operator::Multiply);
+    engine.inputDigit(7);
+    engine.inputEquals();
+
+    QCOMPARE(engine.displayText(), QStringLiteral("21"));
+    QCOMPARE(engine.operationText(), QStringLiteral("3 × 7"));
+
+    engine.inputDigit(4);
+
+    QCOMPARE(engine.displayText(), QStringLiteral("4"));
+    QCOMPARE(engine.operationText(), QString());
 }
 
 void CalculatorEngineTest::exposesPendingOperation()
@@ -107,6 +126,7 @@ void CalculatorEngineTest::supportsUnaryMinus()
     engine.inputEquals();
 
     QCOMPARE(engine.displayText(), QStringLiteral("3"));
+    QCOMPARE(engine.operationText(), QStringLiteral("6 + -3"));
 }
 
 void CalculatorEngineTest::handlesDivisionByZero()
@@ -144,6 +164,7 @@ void CalculatorEngineTest::startsNewInputAfterResult()
     engine.inputDigit(7);
 
     QCOMPARE(engine.displayText(), QStringLiteral("7"));
+    QCOMPARE(engine.operationText(), QString());
 }
 
 void CalculatorEngineTest::startsNegativeInputAfterResult()

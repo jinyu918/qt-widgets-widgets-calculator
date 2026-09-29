@@ -17,6 +17,10 @@ QString CalculatorEngine::displayText() const
 
 QString CalculatorEngine::operationText() const
 {
+    if (justEvaluated_ && !lastExpression_.isEmpty()) {
+        return lastExpression_;
+    }
+
     if (error_ || !leftOperand_ || !pendingOperator_) {
         return {};
     }
@@ -105,6 +109,10 @@ void CalculatorEngine::inputOperator(Operator op)
         return;
     }
 
+    if (justEvaluated_ && !pendingOperator_) {
+        lastExpression_.clear();
+    }
+
     const bool canStartUnaryMinus = op == Operator::Subtract
         && ((waitingForOperand_ && pendingOperator_) || (!leftOperand_ && waitingForOperand_));
     if (canStartUnaryMinus) {
@@ -172,11 +180,13 @@ void CalculatorEngine::inputEquals()
         return;
     }
 
+    const QString completedExpression = operationText() + QLatin1Char(' ') + currentInput_;
     double rightOperand = 0.0;
     if (!parseCurrent(rightOperand) || !applyPending(rightOperand)) {
         return;
     }
 
+    lastExpression_ = completedExpression;
     pendingOperator_.reset();
     waitingForOperand_ = false;
     justEvaluated_ = true;
@@ -191,6 +201,7 @@ void CalculatorEngine::backspace()
     if (justEvaluated_) {
         leftOperand_.reset();
         pendingOperator_.reset();
+        lastExpression_.clear();
         justEvaluated_ = false;
         waitingForOperand_ = false;
     }
@@ -216,6 +227,7 @@ void CalculatorEngine::clear()
     waitingForOperand_ = true;
     justEvaluated_ = false;
     error_ = false;
+    lastExpression_.clear();
 }
 
 QString CalculatorEngine::formatResult(double value)

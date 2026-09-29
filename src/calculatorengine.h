@@ -36,4 +36,5 @@ private:
     bool waitingForOperand_ = true;
     bool justEvaluated_ = false;
     bool error_ = false;
+    QString lastExpression_;
 };
